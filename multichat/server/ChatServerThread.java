@@ -13,20 +13,41 @@ public class ChatServerThread implements Runnable {
 	public static ArrayList<String> usernames = new ArrayList<String>();		//접속자 이름 목록
 	
 	Socket socket;
-	ObjectInputStream input;
-	ObjectOutputStream output;
+	ObjectInputStream ois;
+	ObjectOutputStream oos;
 	String username;
 	String addr;
 	
 	
 	public ChatServerThread(Socket socket) {
+		this.socket = socket;
+		try {
+			ois = new ObjectInputStream(socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {	}
 	}
 
 	//클라이언트로부터의 전송을 기다림.
 	@Override
 	public void run() {
-		
 		while (true) {
+			try {
+				Data dt = (Data) ois.readObject();
+				int cmd = dt.getState();
+				
+				switch(cmd){
+				case Data.FIRST_CONNECTION:
+					break;
+				case Data.DISCONNECTION:
+					break;
+				case Data.CHAT_MESSAGE:
+					break;
+				}
+				
+			} catch (ClassNotFoundException e) {
+			} catch (IOException e) {
+			}
+			
 		}
 	}
 
